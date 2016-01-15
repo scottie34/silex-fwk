@@ -1,0 +1,18 @@
+#%RAML 0.8
+title: silex-fwk
+baseUri: http://silex-fwk.dev/api
+mediaType: application/json
+/posts:
+  displayName: Posts
+  get:
+    responses:
+      200:
+  post:
+    description: Creates one or more posts.
+    responses:
+      201:
+  /{id}:
+    get:
+      description: Retrieves one or more posts.
+      responses:
+        200:

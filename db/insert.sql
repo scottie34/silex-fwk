@@ -1,0 +1,1 @@
+INSERT INTO posts (created, author, content) VALUES ('2014-01-01 00:00:00', 'foo', 'barbarbar');

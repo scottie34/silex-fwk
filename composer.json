@@ -1,0 +1,23 @@
+{
+  "repositories": [
+    {
+      "url": "https://github.com/scottie34/microrest.php.git",
+      "type": "git"
+    }
+  ],
+  "require": {
+    "silex/silex": "1.3.*",
+    "doctrine/dbal": "2.5.*",
+    "cilex/cilex": "dev-master",
+    "electrolinux/phpquery" : "*",
+    "scottie34/microrest" : "~1.0@dev",
+    "phpunit/phpunit": "3.7.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "SilexFwk\\": "src"}
+    },
+  "autoload-dev": {
+    "psr-4": { "SilexFwk\\Tests\\": "tests" }
+  }
+}
