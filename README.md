@@ -3,7 +3,7 @@
 * why ? lightweight, curiosity
 
 [a (quick win) fork of microrest](https://github.com/scottie34/microrest.php)
-* why ? micraml definition, routes management,
+* why ? raml definition, routes management,
 * allow to Decorate the RestController to manage request parameter and response format
 
 Curl + phpQuery
