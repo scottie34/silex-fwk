@@ -4,7 +4,7 @@
 
 [a (quick win) fork of microrest](https://github.com/scottie34/microrest.php)
 * why ? raml definition, routes management,
-* allow to Decorate the RestController to manage request parameter and response format
+* Decorate the RestController to manage request parameter and response format
 
 Curl + phpQuery
 
