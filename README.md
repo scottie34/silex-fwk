@@ -12,6 +12,6 @@ Curl + phpQuery
 collect posts : php web/console.php GET /api/collect
 
 ## Known Issue (not matching requirements)
-* no unit-test: focus on delivering the main source firstly (short deadline)
+* no unit-test: focus on delivering the main source files firstly (short deadline)
 * 'created' attribute instead of 'date' in JSON Response
 * 'date' don't take time into account
