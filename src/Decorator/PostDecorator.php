@@ -13,8 +13,15 @@ require_once(__DIR__ . '/../../vendor/electrolinux/phpQuery/phpQuery/phpQuery.ph
 
 class PostDecorator extends Decorator
 {
+    const DEFAULT_FROM = '1970-01-01';
+    const DEFAULT_TO = '2070-01-01';
 
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param Request $request
+     * @return QueryBuilder
+     */
     public function beforeGetList(QueryBuilder $queryBuilder, Request $request)
     {
         $from = $request->query->get('from');
@@ -25,36 +32,60 @@ class PostDecorator extends Decorator
             return $queryBuilder;
         } else {
             return $queryBuilder
-                ->select('o.*')
-                ->from('posts', 'o')
                 ->where($queryBuilder->expr()->eq('author', '?'))
                 ->andWhere('o.created BETWEEN ? AND ?')
                 ->setParameter(0, $author)
-                ->setParameter(1, $from ? $from : '1970-01-01')
-                ->setParameter(2, $to ? $to : '2070-01-01');
+                ->setParameter(1, $from ? $from : self::DEFAULT_FROM)
+                ->setParameter(2, $to ? $to : self::DEFAULT_TO);
         }
     }
 
+    /**
+     * @param $results array
+     * @return array
+     */
     public function afterGetList($results)
     {
-
+        $results = $this->renameCreatedToDate($results);
         return array("posts" => $results,
-                            "count" => count($results));
+            "count" => count($results));
     }
 
+    /**
+     * @param $result array
+     * @return array
+     */
     public function afterGetObject($result)
     {
+        $result = $this->renameCreatedToDate($result);
         return array("post" => $result);
     }
 
+    /**
+     * @param $results array
+     * @return JsonResponse
+     */
     public function format($results)
     {
         $response = new JsonResponse($results, 200);
-        $response->headers->set('Content-Type', 'application/json');
-        $response->headers->set('charset', 'utf-8');
-        $response->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         $response->setEncodingOptions(JSON_PRETTY_PRINT);
         return $response;
+    }
+
+    /**
+     * @param $results array
+     * @return array
+     */
+    public function renameCreatedToDate($results)
+    {
+        return array_map(function ($post) {
+            return array(
+                'id' => $post['id'],
+                'content' => $post['content'],
+                'date' => $post['created'],
+                'author' => $post['author'],
+            );
+        }, $results);
     }
 
 

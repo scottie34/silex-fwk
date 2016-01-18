@@ -21,39 +21,65 @@ class PostController
 
     const NB_POSTS = 200;
 
+    /**
+     * @var Connection
+     */
     protected $dbal;
 
+    /**
+     * @var CurlUtils
+     */
+    protected $curlUtils;
+
+    /**
+     * @var PostParserUtils
+     */
+    protected $postParserUtils;
+
+    /**
+     * PostController constructor.
+     * @param Connection $db
+     */
     public function __construct(Connection $db)
     {
         $this->dbal = $db;
+        $this->curlUtils = new CurlUtils();
+        $this->postParserUtils = new PostParserUtils();
     }
 
-    private static function getUrl($currentPageIndex)
+    /**
+     * @param $currentPageIndex
+     * @return string
+     */
+    public static function getUrl($currentPageIndex)
     {
-        if ($currentPageIndex !== 0) {
+        if ($currentPageIndex === 0) {
             return self::BASE_URL;
         }
         return self::BASE_URL . "?page=" . $currentPageIndex;
     }
 
-    public function collect(Request $request)
+    /**
+     * @return JsonResponse
+     */
+    public function collect()
     {
         $toSave = array();
         $count = 0;
-        $currentPageIndex = -1;
+        $currentPageIndex = 0;
         while ($count < self::NB_POSTS) {
             $url = self::getUrl($currentPageIndex++);
             try {
-                $html = CurlUtils::getResource($url);
+                $html = $this->curlUtils->getResource($url);
 
-                $posts = PostParserUtils::getPosts($html);
+                $posts = $this->postParserUtils->getPosts($html);
 
                 foreach ($posts as $post) {
                     if ($count === self::NB_POSTS) {
                         break;
                     }
 
-                    $postContent = PostParserUtils::parse($post);
+                    $postContent = $this->postParserUtils->parse($post);
                     $toSave[$count++] = $postContent;
                 }
             } catch (\Exception $exception) {
@@ -61,14 +87,31 @@ class PostController
             }
         }
 
-        for ($i = 0; $i < count($toSave); ++$i) {
+        for ($i = 0; $i < count($toSave); $i++) {
             $this->dbal->insert(self::MODEL, $toSave[$i]);
         }
 
-        $toReturn = count($toSave) . ' posts have been added';
-        $response = new JsonResponse($toReturn);
-
-        return $response;
+        $toReturn = count($toSave) . " posts have been added";
+        return new JsonResponse($toReturn);
     }
+
+    /**
+     * For unit-tests purposes ONLY
+     * @param CurlUtils $curlUtils
+     */
+    public function setCurlUtils($curlUtils)
+    {
+        $this->curlUtils = $curlUtils;
+    }
+
+    /**
+     * For unit-tests purposes ONLY
+     * @param PostParserUtils $postParserUtils
+     */
+    public function setPostParserUtils($postParserUtils)
+    {
+        $this->postParserUtils = $postParserUtils;
+    }
+
 
 }

@@ -6,7 +6,13 @@ namespace SilexFwk\Parser;
 class CurlUtils
 {
 
-    public static function getResource($url, $options = array())
+    /**
+     * @param $url
+     * @param array $options
+     * @return string
+     * @throws \Exception
+     */
+    public function getResource($url, $options = array())
     {
         $ch = curl_init($url);
         $outputFile = tmpfile();
