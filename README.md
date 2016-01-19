@@ -1,8 +1,8 @@
 ## Main components
-[silex](http://silex.sensiolabs.org/) as main framework
+[Silex](http://silex.sensiolabs.org/) as main framework
 * why ? lightweight, curiosity
 
-[a (quick win) fork of microrest](https://github.com/scottie34/microrest.php)
+[A (quick win) Fork of Microrest](https://github.com/scottie34/microrest.php)
 * why ? raml definition, routes management,
 * Decorate the RestController to manage request parameter and response format
 

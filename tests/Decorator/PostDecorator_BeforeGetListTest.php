@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PostDecorator_BeforeGetListTest extends \PHPUnit_Framework_TestCase
 {
-    const SELECT_QUERY_WITH_PARAMS = "SELECT o.* FROM posts o WHERE (author = ?) AND (o.created BETWEEN ? AND ?)";
+    const SELECT_QUERY_WITH_PARAMS = "SELECT o.* FROM posts o WHERE (author LIKE ?) AND (o.created BETWEEN ? AND ?)";
     const SELECT_QUERY_WITHOUT_PARAMS = "SELECT o.* FROM posts o";
 
     /**
@@ -52,15 +52,15 @@ class PostDecorator_BeforeGetListTest extends \PHPUnit_Framework_TestCase
             // Query with all params set
             array(
                 array(
-                    "from" => "20140101",
-                    "to" => "20150101",
+                    "from" => "2014-01-01",
+                    "to" => "2015-01-01",
                     "author" => "Foo"
                 ),
                 self::SELECT_QUERY_WITH_PARAMS,
                 array(
                     0 => "Foo",
-                    1 => "20140101",
-                    2 => "20150101"
+                    1 => "2014-01-01",
+                    2 => "2015-01-01"
                 ),
             ),
             // Query without params
@@ -71,12 +71,12 @@ class PostDecorator_BeforeGetListTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 array(
-                    "from" => "20140101"
+                    "from" => "2014-01-01"
                 ),
                 self::SELECT_QUERY_WITH_PARAMS,
                 array(
-                    0 => null,
-                    1 => "20140101",
+                    0 => PostDecorator::DEFAULT_AUTHOR,
+                    1 => "2014-01-01",
                     2 => PostDecorator::DEFAULT_TO
                 ),
             ),
@@ -95,14 +95,14 @@ class PostDecorator_BeforeGetListTest extends \PHPUnit_Framework_TestCase
             // Query with only 'from' and 'to' params set
             array(
                 array(
-                    "from" => "20140101",
-                    "to" => "20150101"
+                    "from" => "2014-01-01",
+                    "to" => "2015-01-01"
                 ),
                 self::SELECT_QUERY_WITH_PARAMS,
                 array(
-                    0 => null,
-                    1 => "20140101",
-                    2 => "20150101"
+                    0 => PostDecorator::DEFAULT_AUTHOR,
+                    1 => "2014-01-01",
+                    2 => "2015-01-01"
                 ),
             ),
         );

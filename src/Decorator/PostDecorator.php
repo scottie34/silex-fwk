@@ -13,6 +13,7 @@ require_once(__DIR__ . '/../../vendor/electrolinux/phpQuery/phpQuery/phpQuery.ph
 
 class PostDecorator extends Decorator
 {
+    const DEFAULT_AUTHOR = '%';
     const DEFAULT_FROM = '1970-01-01';
     const DEFAULT_TO = '2070-01-01';
 
@@ -32,9 +33,9 @@ class PostDecorator extends Decorator
             return $queryBuilder;
         } else {
             return $queryBuilder
-                ->where($queryBuilder->expr()->eq('author', '?'))
+                ->where($queryBuilder->expr()->like('author', '?'))
                 ->andWhere('o.created BETWEEN ? AND ?')
-                ->setParameter(0, $author)
+                ->setParameter(0, $author ? $author : self::DEFAULT_AUTHOR)
                 ->setParameter(1, $from ? $from : self::DEFAULT_FROM)
                 ->setParameter(2, $to ? $to : self::DEFAULT_TO);
         }
@@ -57,8 +58,8 @@ class PostDecorator extends Decorator
      */
     public function afterGetObject($result)
     {
-        $result = $this->renameCreatedToDate($result);
-        return array("post" => $result);
+        $result = $this->renameCreatedToDate(array(0 => get_object_vars($result)));
+        return array("post" => $result[0]);
     }
 
     /**

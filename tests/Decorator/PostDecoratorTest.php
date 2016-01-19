@@ -58,19 +58,18 @@ class PostDecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testAfterGetObject()
     {
-        $dummyResult = array(0 => array(
-            "id" => 1,
+        $dummyResult = array("id" => 1,
             "content" => "this is a content",
             "created" => "2014-01-01 00:00:00",
-            "author" => "Foo"));
+            "author" => "Foo");
 
-        $expectedResult = array(0 => array(
+        $expectedResult = array(
             "id" => 1,
             "content" => "this is a content",
             "date" => "2014-01-01 00:00:00",
-            "author" => "Foo"));
+            "author" => "Foo");
 
-        $result = $this->postDecorator->afterGetObject($dummyResult);
+        $result = $this->postDecorator->afterGetObject((object)$dummyResult);
         $this->assertCount(1, $result, "Provided results should now be wrapped in a array of size 1");
         $this->assertEquals($expectedResult, $result["post"], "'post' should be set to the provided results and 'created' dimension should now be 'date'");
     }
